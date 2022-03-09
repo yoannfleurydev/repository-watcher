@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Schedule
+on:
+  schedule:
+    - cron: "00 15 * * 6"
+
+jobs:
+  post-to-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the crate
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+      - name: Run the crate
+        uses: actions-rs/cargo@v1
+        env:
+          SLACK_HOOK: ${{ secrets.SLACK_HOOK }}
+          REPOSITORY: BearStudio/start-ui-web
+        with:
+          command: run
