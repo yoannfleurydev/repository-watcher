@@ -2,7 +2,7 @@
 name: Schedule
 on:
   schedule:
-    - cron: "00 15 * * 6"
+    - cron: "30 15 * * 6"
 
 jobs:
   post-to-slack:
