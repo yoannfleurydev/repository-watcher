@@ -65,7 +65,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let pulls = client
         .get(format!(
-            "https://api.github.com/repos/{repository}/pulls?state=closed&=sort=updated",
+            "https://api.github.com/repos/{repository}/pulls?state=closed&sort=updated&direction=desc",
         ))
         .send()
         .await?
