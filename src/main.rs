@@ -57,6 +57,7 @@ fn get_this_week_pull_requests(pulls: &Vec<Value>) -> Vec<Value> {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
     let slack_hook = env::var("SLACK_HOOK").expect("SLACK_HOOK environment variable not set");
+    let discord_hook = env::var("DISCORD_HOOK").expect("DISCORD_HOOK environment variable not set");
     let repository = env::var("REPOSITORY").expect("REPOSITORY environment variable not set");
 
     let client = reqwest::Client::builder()
@@ -95,20 +96,38 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let stargazers_count = get_stargazers_count(&client, repository).await?;
-    let text = format!(
-        r#"
+    let mut slack_map = HashMap::new();
+    slack_map.insert(
+        "text",
+        format!(
+            r#"
 🚀 Start UI [web] :start-ui-web: has *{}* stars.
 
 {}
 
 {}
 "#,
-        stargazers_count, intro, important
+            stargazers_count, intro, important
+        ),
     );
-    let mut map = HashMap::new();
-    map.insert("text", text);
 
-    client.post(slack_hook).json(&map).send().await?;
+    let mut discord_map = HashMap::new();
+    discord_map.insert(
+        "content",
+        format!(
+            r#"
+🚀 Start UI [web] :startuiweb: has **{}** stars.
+
+{}
+
+{}
+"#,
+            stargazers_count, intro, important
+        ),
+    );
+
+    client.post(slack_hook).json(&slack_map).send().await?;
+    client.post(discord_hook).json(&discord_map).send().await?;
 
     Ok(())
 }
