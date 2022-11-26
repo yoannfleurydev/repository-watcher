@@ -3,6 +3,7 @@ name: Schedule
 on:
   schedule:
     - cron: "30 15 * * 6"
+  workflow_dispatch:
 
 jobs:
   post-to-slack:
