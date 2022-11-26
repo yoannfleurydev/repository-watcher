@@ -18,6 +18,7 @@ jobs:
         uses: actions-rs/cargo@v1
         env:
           SLACK_HOOK: ${{ secrets.SLACK_HOOK }}
+          DISCORD_HOOK: ${{ secrets.DISCORD_HOOK }}
           REPOSITORY: BearStudio/start-ui-web
         with:
           command: run
